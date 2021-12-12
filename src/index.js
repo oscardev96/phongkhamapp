@@ -4,7 +4,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './app.js';
-
+import {BrowserRouter} from "react-router-dom"
 window.onload = () => {
-    ReactDOM.render(<App />, document.getElementById('app'));
+    ReactDOM.render(<BrowserRouter>
+    <App /></BrowserRouter>, document.getElementById('app'));
 };
