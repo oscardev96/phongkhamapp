@@ -13,8 +13,6 @@ import "antd/dist/antd.css"; // or 'antd/dist/antd.less'
 import "./app.css";
 import { Layout, Menu } from "antd";
 import {
-  MenuUnfoldOutlined,
-  MenuFoldOutlined,
   UserOutlined,
   VideoCameraOutlined,
   UploadOutlined,
@@ -24,7 +22,6 @@ const { Header, Sider, Content } = Layout;
 
 export default function App() {
   const history = useHistory();
-  console.log("history", history);
   return (
     <Layout style={{ height: "100vh" }}>
       <Sider trigger={null} collapsible>
