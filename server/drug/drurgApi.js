@@ -53,11 +53,10 @@ router.post("/addDrug" , async (req, res) => {
     }
 })
 
-router.post("/updateQuantityDrug" , async (req, res) => {
+router.post("/updateDrug" , async (req, res) => {
     let {ten_thuoc, don_vi, gia_ban, so_luong , id } = req.body
     
-    let str_qr = `UPDATE drug SET ${ so_luong ? `so_luong = ${so_luong} ` : ""}  ${ gia_ban ? `,gia_ban = ${gia_ban}` : ""}   ${ ten_thuoc ? `,ten_thuoc = ${ten_thuoc}` : ""} 
-    ${ don_vi ? `,don_vi = ${don_vi}` : ""} WHERE id = ${id} `
+    let str_qr = `UPDATE drug SET  so_luong ='${so_luong}' ,gia_ban = '${gia_ban}' ,ten_thuoc =' ${ten_thuoc}' ,don_vi = '${don_vi}'  WHERE id = ${id} `
     try {
         const [rows, fields] = await database.query(str_qr)
         res.status(200).json({

@@ -1,17 +1,18 @@
 
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useRef} from 'react'
 import { api } from '../../api'
 import { urlApi } from '../../urlApis'
 import { common_post } from '../../utils'
 import "./drug.css"
-import { Table, Row, Col, Button } from 'antd'
+import { Table, Row, Col, Button, notification } from 'antd'
 import { EditOutlined , DeleteOutlined, PlusCircleFilled  } from '@ant-design/icons'
+import ModalDrug from './ModalDrug'
 export default function Drug() {
-
+    
     useEffect(() => {
        initData()
     }, [])
-
+    const modalDrug = useRef()
     const [drug, setDrug] = useState([])
 
     const initData = async () => {
@@ -28,12 +29,43 @@ export default function Drug() {
 
     ////
     const deleteDrug = async (id) => {
-        console.log(id)
+       
         try {
             const response = await common_post(urlApi.DELETE_DRG, {id})
             console.log("response", response)
             if (response.status === "OK") {
                initData()
+            }
+        } catch (error) {
+            
+        }
+    }
+
+    const onSubmit = async (values) => {
+        try {
+            const response = await common_post(urlApi.ADD_DRUG, values)
+            console.log("response", response)
+            if (response.status === "OK") {
+               notification.success({message:"Thêm thuốc thành công !"})
+               initData()
+               modalDrug.current.closeModal()
+
+            }
+        } catch (error) {
+            
+        }
+    }
+
+
+    const onUpdate = async (values) => {
+        try {
+            const response = await common_post(urlApi.EDIT_DRUG, values)
+            console.log("response", response)
+            if (response.status === "OK") {
+               notification.success({message:"Sửa thành công !"})
+               initData()
+               modalDrug.current.closeModal()
+
             }
         } catch (error) {
             
@@ -75,7 +107,7 @@ export default function Drug() {
                         icon={<EditOutlined />}
                         onClick={(e) => {
                             e.stopPropagation()
-                            console.log(record)
+                            modalDrug.current.openModal(record)
                         }}
                     />
                  </Col>
@@ -97,17 +129,19 @@ export default function Drug() {
     return (
         <div className='container'>
             <Row justify="space-between" align="middle" style={{marginBottom :"20px"}}>
-                <Col style={{fontSize : "20px"}}>Danh sách thuốc</Col>
-                <Col>
+                <Col style={{fontSize : "20px",fontWeight:"bold"}}>Danh sách thuốc</Col>
+                <Col style={{}}>
                     <Button 
                         icon={<PlusCircleFilled/>}
-                        onClick={() => {alert("them thuoc")}}
+                        onClick={() => modalDrug.current.openModal()}
+                        style={{backgroundColor:"#2CB2A5", borderRadius:"10px", color:"#FFF"}}
                     >
                         Thêm thuốc
                     </Button>
                 </Col>
             </Row>
            <Table columns={columns} dataSource={drug} pagination={false} />
+           <ModalDrug ref = {modalDrug} onSubmit={onSubmit} onUpdate = {onUpdate}/>
         </div>
     )
 }
