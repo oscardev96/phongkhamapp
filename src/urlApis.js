@@ -4,6 +4,7 @@ export const urlApi =  {
     GET_LIST_DRUG : baseUrl + "/drug",
     DELETE_DRG : baseUrl + "/drug/delete",
     ADD_DRUG : baseUrl + "/drug/addDrug",
-    EDIT_DRUG : baseUrl + "/drug/updateDrug"
+    EDIT_DRUG : baseUrl + "/drug/updateDrug",
+    GET_DOCTOR : baseUrl + "/doctor",
 }
 

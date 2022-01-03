@@ -6,7 +6,8 @@ import cors from 'cors';
 const Api = express();
 const HTTP = http.Server(Api);
 const bodyParser = require("body-parser");
-const drugApi = require("./drug/drurgApi")
+const drugApi = require("./drug/drurgApi");
+const doctorApi = require("./doctor/doctor")
 Api.use(cors());
 
 //set header
@@ -25,6 +26,7 @@ Api.use((req, res, next) => {
     next();
   });
 Api.use("/drug", drugApi )
+Api.use("/doctor", doctorApi)
 
 HTTP.listen(9001, () => {
     console.log('listening on *:9001');
