@@ -2,7 +2,7 @@
 import React, {useState, useEffect, useRef} from 'react'
 import { api } from '../../api'
 import { urlApi } from '../../urlApis'
-import { common_post } from '../../utils'
+import { common_post, formatCurrency } from '../../utils'
 import "./drug.css"
 import { Table, Row, Col, Button, notification } from 'antd'
 import { EditOutlined , DeleteOutlined, PlusCircleFilled  } from '@ant-design/icons'
@@ -88,6 +88,7 @@ export default function Drug() {
           title: 'Giá bán',
           dataIndex: 'gia_ban',
           key: 'gia_ban',
+          render : (gia_ban) => <span>{formatCurrency(gia_ban , "đ", true)}</span>
         },
         {
             title: 'Số lượng',

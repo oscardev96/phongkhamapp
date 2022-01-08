@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useImperativeHandle } from "react";
 import { Modal, Form, Input, Col, Row, Select, notification, Table, Button, InputNumber } from "antd";
 import moment from "moment";
-import { common_post } from "../../utils";
+import { common_post, formatCurrency } from "../../utils";
 import { urlApi } from "../../urlApis";
 import { DeleteFilled } from "@ant-design/icons";
 
@@ -21,15 +21,8 @@ const CreateAppointment = (props, ref) => {
     openModal: (current) => {
       openModal();
       if (current) {
-        console.log("current data", current);
-        setIsEdit(true);
-        setCurrentData(current);
-        form.setFields([
-          { name: "ten_thuoc", value: current.ten_thuoc },
-          { name: "don_vi", value: current.don_vi },
-          { name: "gia_ban", value: current.gia_ban },
-          { name: "so_luong", value: current.so_luong },
-        ]);
+        setCurrentData(current)
+        setData(current)
       }
     },
     closeModal: () => {
@@ -46,7 +39,20 @@ const CreateAppointment = (props, ref) => {
     caculationMoney()
   }, [selectDrug,price])
 
-
+  const setData = (data) => {
+    console.log(data)
+    setTotalMoney(data.total_price)
+    form.setFields([
+      {name:"name" , value:data.name},
+      {name:"phone", value:data.phone},
+      {name:"address", value:data.address},
+      {name:"price", value:data.price},
+      {name:"chan_doan", value:data.chan_doan},
+      {name : "doctor" , value:data.doctor_name}
+    ])
+    setPrice(data.price)
+    setSelectDrug(data.thuoc)
+  }
   const caculationMoney = () => {
     let totalDrug = 0
     for (let index = 0; index < selectDrug.length; index++) {
@@ -65,12 +71,23 @@ const CreateAppointment = (props, ref) => {
   const closeModal = () => {
     setVisible(false);
     setIsEdit(false);
+    setTotalMoney(0);
+    setTotalMoneyDrug(0)
+    setSelectDrug([])
+    setPrice(0)
     currentData && setCurrentData();
     form.resetFields();
   };
   const onSubmit = (values) => {
     console.log(values)
-    console.log(selectDrug)
+    let dataRequest =  {
+      ...values ,
+      doctor : JSON.parse(values.doctor) ,
+      thuoc : selectDrug, 
+      total_price : totalMoney
+    }
+    props.onCreate(dataRequest)
+    console.log(dataRequest)
   };
 
 
@@ -110,9 +127,12 @@ const CreateAppointment = (props, ref) => {
                 return
             }
         }
+        console.log(data)
       setSelectDrug(selectDrug.concat(data))
   
   }
+
+
 
 
   const columns = [
@@ -131,6 +151,7 @@ const CreateAppointment = (props, ref) => {
       title: 'Giá bán',
       dataIndex: 'gia_ban',
       key: 'gia_ban',
+      render : (gia_ban) => <span>{formatCurrency(gia_ban , "đ", true)}</span>
     },
     {
         title: 'Tồn kho',
@@ -192,7 +213,7 @@ const CreateAppointment = (props, ref) => {
       title={isEdit ? "Chi tiết" : "Thêm mới"}
       centered
       visible={visible}
-      onOk={() => form.submit()}
+      onOk={() => currentData ? closeModal() : form.submit()}
       onCancel={() => closeModal()}
       width="70%"
     >
@@ -206,12 +227,12 @@ const CreateAppointment = (props, ref) => {
             <span> Ngày {moment(currentTime).format("L")}</span>
           </Col>
         </Row>
-        <Row gutter={20}>
+        <Row gutter={20} style={{marginTop: "20px"}}>
           <Col span={8}>
             <Form.Item
               label="Tên bệnh nhân"
-              rules={[{ required: true, message: "Tên thuốc" }]}
-              name="ten_benh_nhan"
+              rules={[{ required: true, message: "Tên bệnh nhân" }]}
+              name="name"
             >
               <Input />
             </Form.Item>
@@ -219,8 +240,8 @@ const CreateAppointment = (props, ref) => {
           <Col span={8}>
             <Form.Item
               label="Số điện thoại"
-              rules={[{ required: true, message: "Đơn vị tính" }]}
-              name="so_dien_thoai"
+              rules={[{ required: true, message: "Số điện thoại" }]}
+              name="phone"
             >
               <Input />
             </Form.Item>
@@ -228,8 +249,8 @@ const CreateAppointment = (props, ref) => {
           <Col span={8}>
             <Form.Item
               label="Địa chỉ"
-              rules={[{ required: true, message: "Điền giá bán" }]}
-              name="dia_chi"
+              rules={[{ required: true, message: "Địa chỉ" }]}
+              name="address"
             >
               <Input />
             </Form.Item>
@@ -240,17 +261,19 @@ const CreateAppointment = (props, ref) => {
           <Col span={12}>
             <Form.Item
               label="Giá khám"
-              rules={[{ required: true, message: "Điền số lượng" }]}
-              name="gia_kham"
+              rules={[{ required: true, message: "Điền giá khám" }]}
+              name="price"
             >
-              <InputNumber onChange={(e) => setPrice(e) }  style={{width : "100%"}}/>
+              <InputNumber onChange={(e) => setPrice(e) }  style={{width : "100%"}}
+              formatter={value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+              />
             </Form.Item>
           </Col>
           <Col span={12}>
             <Form.Item
               label="Bác sĩ"
               rules={[{ required: true, message: "Chọn bác sĩ" }]}
-              name="bac_si"
+              name="doctor"
             >
             <Select >
                 {dataDoctor.map((item, index) => {
@@ -294,7 +317,7 @@ const CreateAppointment = (props, ref) => {
               
             </Col>
             <Col span={10}>
-            <span>{totalMoneyDrug} đồng</span>
+            <span>{formatCurrency(totalMoneyDrug , "đ", true)} đồng</span>
             </Col>
 
         </Row>
@@ -305,7 +328,7 @@ const CreateAppointment = (props, ref) => {
                
             </Col>
             <Col span={10}>
-            <span>{totalMoney} đồng</span>
+            <span>{formatCurrency(totalMoney, "đ", true)} đồng</span>
             </Col>
 
         </Row>

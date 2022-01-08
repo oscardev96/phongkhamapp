@@ -8,6 +8,7 @@ const HTTP = http.Server(Api);
 const bodyParser = require("body-parser");
 const drugApi = require("./drug/drurgApi");
 const doctorApi = require("./doctor/doctor")
+const appointmentApi = require ("./appointment/appointment")
 Api.use(cors());
 
 //set header
@@ -27,6 +28,7 @@ Api.use((req, res, next) => {
   });
 Api.use("/drug", drugApi )
 Api.use("/doctor", doctorApi)
+Api.use("/appointment",appointmentApi )
 
 HTTP.listen(9001, () => {
     console.log('listening on *:9001');

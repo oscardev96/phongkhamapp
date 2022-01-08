@@ -1,5 +1,5 @@
 import React,{useState, useEffect, useImperativeHandle} from 'react'
-import { Modal, Form, Input } from 'antd';
+import { Modal, Form, Input, InputNumber } from 'antd';
 
 
 const ModalDrug = (props, ref) => {
@@ -75,7 +75,10 @@ const ModalDrug = (props, ref) => {
                 <Input/>
              </Form.Item>
              <Form.Item label="Giá bán" rules={[{ required: true, message: 'Điền giá bán' , }]} name="gia_ban">
-                <Input/>
+                <InputNumber 
+                style={{width :"100%"}}
+                formatter={value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                />
              </Form.Item>
              <Form.Item label="Số lượng" rules={[{ required: true, message: 'Điền số lượng'  }, ]} name="so_luong">
                 <Input/>
