@@ -97,6 +97,11 @@ export default function Appointment() {
             key: 'doctor_name',
         },
         {
+          title: 'Chẩn đoán',
+          dataIndex: 'chan_doan',
+          key: 'chan_doan',
+      },
+        {
             title: 'Tổng tiền',
             dataIndex: 'total_price',
             key: 'total_price',

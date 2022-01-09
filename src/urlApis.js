@@ -9,7 +9,8 @@ export const urlApi =  {
 
     GET_LIST_APPOINTMENT  : baseUrl + "/appointment",
     CREATE_APPOINTMENT : baseUrl + "/appointment/create",
-    GET_APPOINTMENT : baseUrl + "/appointment/detailAppointment"
+    GET_APPOINTMENT : baseUrl + "/appointment/detailAppointment",
+    GET_INFO_DASHBOARD : baseUrl + "/dashboard"
 
 }
 
