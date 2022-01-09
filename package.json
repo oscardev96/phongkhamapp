@@ -1,9 +1,10 @@
 {
-  "name": "electron-react-node-boilerplate",
+  "name": "phongkhamsan",
   "version": "1.0.0",
   "description": "An Electron application with React and Node",
   "main": "./main.js",
   "homepage": "./",
+  "asarUnpack": ["**/*.node"],
   "scripts": {
     "start": "concurrently \"npm run react-start\" \"npm run server-start\" \"wait-on http://localhost:3000 && npm run electron-dev\"",
     "react-build": "react-app-rewired build",
@@ -15,7 +16,7 @@
     "preelectron-pack": "npm run react-build && npm run server-build",
     "start-react": "react-scripts start"
   },
-  "author": "tbuyse",
+  "author": "datcan",
   "devDependencies": {
     "@babel/cli": "^7.4.4",
     "@babel/core": "^7.4.4",

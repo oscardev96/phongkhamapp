@@ -3,7 +3,7 @@ const router = express.Router()
 const database = require("../connectDatabase");
 
 router.post("/", async (req, res, next) => {
-    let str_qr = "SELECT * FROM drug"
+    let str_qr = "SELECT * FROM drug where status = 1"
     try {
         const [rows, fields] = await database.query(str_qr)
         res.status(200).json({
@@ -19,7 +19,7 @@ router.post("/", async (req, res, next) => {
 })
 
 router.post("/delete" , async (req, res) => {
-    let str_qr = `DELETE FROM drug WHERE id = ${req.body.id} `
+    let str_qr = `UPDATE drug SET status = 0 WHERE id = ${req.body.id} `
     try {
         const [rows, fields] = await database.query(str_qr)
         res.status(200).json({
